@@ -1,10 +1,5 @@
-// utils/PointsCalculator.js
-
-const {
-  parseFloatSafe,
-  isValidTime,
-  isValidDate,
-} = require("../utils/validations");
+const moment = require("moment");
+const { parseFloatSafe } = require("../utils/validations");
 
 // Define constants for points
 const ROUND_DOLLAR_POINTS = 50;
@@ -47,11 +42,13 @@ const isRequestValid = (receipt) => {
     }
   });
 
-  // Validate purchase date and time
-  if (!isValidDate(receipt.purchaseDate)) {
+  // Validate purchase date using moment.js
+  if (!moment(receipt.purchaseDate, "YYYY-MM-DD", true).isValid()) {
     throw new Error("Invalid date format. Must be YYYY-MM-DD");
   }
-  if (!isValidTime(receipt.purchaseTime)) {
+
+  // Validate purchase time using moment.js
+  if (!moment(receipt.purchaseTime, "HH:mm", true).isValid()) {
     throw new Error("Invalid time format. Must be HH:MM");
   }
 
@@ -102,15 +99,15 @@ exports.calculatePoints = (receipt) => {
     }
   });
 
-  // 7. Points for odd day
-  const [year, month, day] = receipt.purchaseDate.split("-");
-  if (parseInt(day, 10) % 2 !== 0) {
+  // 7. Points for odd day (using moment.js)
+  const purchaseDate = moment(receipt.purchaseDate, "YYYY-MM-DD");
+  if (purchaseDate.date() % 2 !== 0) {
     points += ODD_DAY_POINTS; // ODD_DAY_POINTS
   }
 
-  // 8. Points for purchase time between 2:00pm and 4:00pm
-  const purchaseTime = new Date(`1970-01-01T${receipt.purchaseTime}:00`);
-  if (purchaseTime.getHours() >= 14 && purchaseTime.getHours() < 16) {
+  // 8. Points for purchase time between 2:00pm and 4:00pm (using moment.js)
+  const purchaseTime = moment(receipt.purchaseTime, "HH:mm");
+  if (purchaseTime.hours() >= 14 && purchaseTime.hours() < 16) {
     points += AFTERNOON_POINTS; // AFTERNOON_POINTS
   }
 

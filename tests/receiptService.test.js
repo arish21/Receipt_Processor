@@ -1,4 +1,4 @@
-const { calculatePoints } = require("../server.js");
+const { calculatePoints } = require("../src/server.js");
 
 describe("Receipt Processing Tests", () => {
   test("Valid receipt with expected points", () => {
