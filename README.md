@@ -1,4 +1,3 @@
-
 <h1>Receipt Processor</h1><br>
 This is a backend service for processing receipts and calculating points based on various criteria. It provides a simple API with endpoints to process receipts, retrieve points, and check server status. The service is built using Express.js, Dockerized for deployment, and includes Swagger documentation for the API.
 
@@ -13,10 +12,17 @@ Before running this application, ensure that the following are installed:<br>
 <strong>Docker:</strong> The application is Dockerized for easy deployment.<br>
 <strong>Node.js:</strong> If you want to run the app locally without Docker.<br>
 
+<h2>In-Memory Document Storage</h2>
+In this project, receipt data is temporarily stored in memory rather than a full-fledged database. This is done for simplicity and to quickly demonstrate the functionality of the service without the complexity of database setup.
+
+<h3>How It Works</h3>
+In-memory Store: The receipt data is stored in the receiptDataStore object, which is a simple in-memory JavaScript object. Each receipt is assigned a unique ID (generated using uuid) when processed.
+Receipt Processing: When a receipt is processed through the POST /receipts/process endpoint, the data is validated and points are calculated. If successful, the receipt details along with the calculated points are stored in the receiptDataStore object.
+Retrieving Points: The GET /receipts/:id/points endpoint retrieves the points for a specific receipt using the ID. If the receipt ID exists in the in-memory store, the points are returned. If the ID is not found, a 404 error is returned.
 <h2>Getting Started</h2><br>
 
 <h3>Clone the repository</h3>
-<pre><code>git clone https://github.com/arish21/Receipt_Processor.git
+<pre><code>git clone https://github.com/arish21/Receipt_processor.git
 cd Receipt_Processor</code></pre>
 
 <h3>Running Locally</h3>
@@ -43,16 +49,18 @@ The API will now be accessible at <a href="http://localhost:3000" target="_blank
 To run the tests inside the Docker container, you can override the default command as follows:
 
 <strong>Build the Docker image:</strong><br>
+
 <pre><code>docker build -t receipt-processor .</code></pre>
 
 <strong>Run the tests (Override CMD to Run Tests):</strong><br>
+
 <pre><code>docker run receipt-processor npm test</code></pre>
 
 This command will run `npm test` instead of the default `npm start` (which runs the app), allowing you to execute the tests in the container.
 
 <h2>API Endpoints</h2>
 This API is documented using <strong>Swagger</strong>. You can view the interactive Swagger API documentation at the following endpoint:
-<p><strong>Swagger Documentation:</strong> <a href="http://localhost:3000/api-docs" target="_blank">http://localhost:3000/api-docs</a></p>
+<p><strong>Swagger Documentation:</strong> <a href="http://localhost:3000/swagger-api-docs" target="_blank">http://localhost:3000/swagger-api-docs</a></p>
 
 <h3>1. POST /receipts/process</h3>
 This endpoint processes a receipt, validates the fields, and calculates points based on various criteria.<br>
@@ -98,7 +106,6 @@ This will run all the tests and display the results.
 <h2>.env Configuration</h2>
 <strong>NOTE: For simplicity purposes I have pushed .env to the github. I know it is not a good practice to push a .env to the github.</strong>
 
-
 <h2>Docker Configuration</h2>
 The application is fully Dockerized. To build and run the Docker container, follow these steps:
 
@@ -108,4 +115,3 @@ The application is fully Dockerized. To build and run the Docker container, foll
 <h4>Run the Docker container:</h4>
 <pre><code>docker run -p 3000:3000 receipt-processor</code></pre>
 Once running, you can access the API at <a href="http://localhost:3000" target="_blank">http://localhost:3000</a>.
-
