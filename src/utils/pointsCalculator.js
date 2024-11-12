@@ -25,10 +25,18 @@ const isRequestValid = (receipt) => {
     throw new Error("Invalid total value. Must be a numeric string.");
   }
 
-  // Validate items array
-  if (!Array.isArray(receipt.items)) {
-    throw new Error("Items array must be a non-empty array");
+  // Check if 'items' array is missing
+  if (!receipt.hasOwnProperty("items")) {
+    throw new Error("Items array is required");
   }
+
+  // Validate 'items' array: Ensure it's not empty
+  if (!Array.isArray(receipt.items) || receipt.items.length === 0) {
+    throw new Error("Items array must not be empty");
+    // return true;
+  }
+
+  // Validate each item if the items array is not empty
   receipt.items.forEach((item) => {
     if (
       typeof item.shortDescription !== "string" ||

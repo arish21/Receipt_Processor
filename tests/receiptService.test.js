@@ -1,4 +1,4 @@
-const { calculatePoints } = require("../src/server.js");
+const { calculatePoints } = require("../src/services/receiptService");
 
 describe("Receipt Processing Tests", () => {
   test("Valid receipt with expected points", () => {
@@ -87,9 +87,7 @@ describe("Receipt Processing Tests", () => {
       total: "6.49",
     };
 
-    expect(() => calculatePoints(receipt)).toThrow(
-      "Items array must be a non-empty array"
-    );
+    expect(() => calculatePoints(receipt)).toThrow("Items array is required");
   });
 
   test("Points calculation when the total is a round dollar", () => {
@@ -148,7 +146,7 @@ describe("Receipt Processing Tests", () => {
     );
   });
 
-  test("Receipt with no items should get no points", () => {
+  test("Receipt with no items should throw an error", () => {
     const receipt = {
       retailer: "Target",
       purchaseDate: "2022-01-01",
@@ -157,8 +155,8 @@ describe("Receipt Processing Tests", () => {
       total: "0.00",
     };
 
-    const expectedPoints = 0; // No points for no items
-    const points = calculatePoints(receipt);
-    expect(points).toBe(expectedPoints);
+    expect(() => calculatePoints(receipt)).toThrow(
+      "Items array must not be empty"
+    );
   });
 });
